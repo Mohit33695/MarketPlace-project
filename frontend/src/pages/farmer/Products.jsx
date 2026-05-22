@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Sidebar from '../../components/Sidebar'
 import api from '../../api/axios'
 import toast from 'react-hot-toast'
-import { Plus, Edit2, Trash2, X, Package, Leaf, ToggleLeft, ToggleRight, AlertTriangle } from 'lucide-react'
+import { Plus, Edit2, Trash2, X, Package, Leaf, ToggleLeft, ToggleRight, Info, AlertTriangle, Calendar, DollarSign } from 'lucide-react'
 
 const UNITS = ['kg', 'quintal', 'ton', 'piece', 'dozen', 'liter', 'bundle']
 
@@ -35,8 +35,10 @@ export default function FarmerProducts() {
   const openAdd = () => { setEditing(null); setForm(emptyForm); setShowModal(true) }
   const openEdit = (p) => {
     setEditing(p)
-    setForm({ name: p.name, description: p.description, price: p.price, quantity: p.quantity,
-      unit: p.unit, category: p.category || '', is_organic: p.is_organic, harvest_date: p.harvest_date || '', image: null })
+    setForm({
+      name: p.name, description: p.description, price: p.price, quantity: p.quantity,
+      unit: p.unit, category: p.category || '', is_organic: p.is_organic, harvest_date: p.harvest_date || '', image: null
+    })
     setShowModal(true)
   }
 
@@ -50,10 +52,10 @@ export default function FarmerProducts() {
       })
       if (editing) {
         await api.patch(`/products/${editing.id}/`, fd, { headers: { 'Content-Type': 'multipart/form-data' } })
-        toast.success('Product updated!')
+        toast.success('Product updated! ✨')
       } else {
         await api.post('/products/', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
-        toast.success('Product added!')
+        toast.success('Product added! 🌾')
       }
       setShowModal(false)
       fetchProducts()
@@ -67,7 +69,7 @@ export default function FarmerProducts() {
   }
 
   const handleDelete = async (id) => {
-    if (!confirm('Delete this product?')) return
+    if (!confirm('Are you sure you want to delete this product?')) return
     await api.delete(`/products/${id}/`)
     toast.success('Product deleted')
     fetchProducts()
@@ -82,155 +84,238 @@ export default function FarmerProducts() {
   }
 
   return (
-    <div className="flex">
+    <div style={{ display: 'flex' }}>
       <Sidebar />
       <main className="page-content">
-        <div className="flex items-center justify-between mb-8">
+
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px' }} className="animate-fade-in-up">
           <div>
-            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-              <Package size={24} className="text-green-400" /> My Products
-            </h1>
-            <p className="text-slate-400 text-sm mt-1">{products.length} products listed</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
+              <div style={{ width: '38px', height: '38px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.25)' }}>
+                <Package size={18} style={{ color: '#34D399' }} />
+              </div>
+              <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '26px', fontWeight: 800, color: '#EEF2FF' }}>
+                My Listings
+              </h1>
+              {products.length > 0 && (
+                <span style={{ padding: '4px 12px', borderRadius: '99px', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.22)', color: '#34D399', fontSize: '12px', fontWeight: 800 }}>
+                  {products.length} listed
+                </span>
+              )}
+            </div>
+            <p style={{ color: 'var(--text-sec)', fontSize: '14px', marginLeft: '50px' }}>Manage your product listings and view market rates</p>
           </div>
-          <button className="btn-primary" onClick={openAdd}><Plus size={16} /> Add Product</button>
+          <button className="btn-primary" onClick={openAdd} style={{ fontSize: '13px' }}>
+            <Plus size={16} /> Add Product
+          </button>
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center h-40"><div className="spinner" /></div>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '160px' }}>
+            <div className="spinner" />
+          </div>
         ) : products.length === 0 ? (
-          <div className="glass p-16 text-center">
-            <Package size={48} className="text-slate-600 mx-auto mb-4" />
-            <p className="text-slate-400 font-medium">No products yet</p>
-            <p className="text-slate-500 text-sm mt-1">Add your first product to start selling</p>
-            <button className="btn-primary mt-4" onClick={openAdd}><Plus size={15} /> Add First Product</button>
+          <div style={{ textAlign: 'center', padding: '80px 24px', borderRadius: '24px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ width: '80px', height: '80px', borderRadius: '24px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+              <Package size={36} style={{ color: '#34D399' }} />
+            </div>
+            <p style={{ fontSize: '18px', fontWeight: 700, color: '#EEF2FF', marginBottom: '8px' }}>No products listed</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '24px' }}>Add your first farm listing to start selling to buyers</p>
+            <button className="btn-primary" onClick={openAdd} style={{ fontSize: '14px' }}>
+              <Plus size={15} /> Add First Product
+            </button>
           </div>
         ) : (
-          <div className="glass overflow-hidden">
+          <div className="glass" style={{ overflow: 'hidden' }}>
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Product</th><th>Category</th><th>Price</th>
-                  <th>Stock</th><th>AI Price</th><th>Status</th><th>Actions</th>
+                  <th style={{ paddingLeft: '24px' }}>Product</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Stock</th>
+                  <th>AI Price</th>
+                  <th>Status</th>
+                  <th style={{ paddingRight: '24px', textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {products.map(p => (
-                  <tr key={p.id}>
-                    <td>
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-slate-700 overflow-hidden flex items-center justify-center">
-                          {p.image_url ? <img src={p.image_url} className="w-full h-full object-cover" /> : <span>🌾</span>}
+                {products.map(p => {
+                  const lowStock = p.quantity < 10
+                  return (
+                    <tr key={p.id}>
+                      <td style={{ paddingLeft: '24px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                          <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'var(--surface-3)', overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            {p.image_url 
+                              ? <img src={p.image_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+                              : <span style={{ fontSize: '20px' }}>🌾</span>}
+                          </div>
+                          <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+                              <p style={{ fontWeight: 700, color: '#EEF2FF', fontSize: '14px' }}>{p.name}</p>
+                              {p.is_organic && (
+                                <span className="badge badge-green" style={{ fontSize: '9px', padding: '2px 6px' }}>
+                                  <Leaf size={8} /> Organic
+                                </span>
+                              )}
+                            </div>
+                            <p style={{ fontSize: '11px', color: 'var(--text-sec)', maxWidth: '240px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {p.description}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-medium text-white text-sm">{p.name}</p>
-                          {p.is_organic && <span className="badge badge-green text-xs"><Leaf size={9} /> Organic</span>}
+                      </td>
+                      <td>
+                        <span style={{ fontSize: '13px', color: 'var(--text-sec)', fontWeight: 500 }}>
+                          {p.category_name || '—'}
+                        </span>
+                      </td>
+                      <td>
+                        <span style={{ fontSize: '14px', fontWeight: 700, color: '#34D399' }}>
+                          ₹{p.price}/{p.unit}
+                        </span>
+                      </td>
+                      <td>
+                        <span style={{ fontSize: '14px', fontWeight: 700, color: lowStock ? '#FCA5A5' : '#EEF2FF' }}>
+                          {p.quantity} {p.unit}
+                        </span>
+                        {lowStock && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px', color: '#FCD34D' }}>
+                            <AlertTriangle size={10} />
+                            <span style={{ fontSize: '10px', fontWeight: 600 }}>Low Stock</span>
+                          </div>
+                        )}
+                      </td>
+                      <td>
+                        {p.ai_suggested_price ? (
+                          <span className="ai-chip" style={{ fontSize: '10px', padding: '3px 8px' }}>
+                            🤖 Suggested: ₹{p.ai_suggested_price}
+                          </span>
+                        ) : (
+                          <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>No Data</span>
+                        )}
+                      </td>
+                      <td>
+                        <span className={`badge ${p.is_active ? 'badge-green' : 'badge-red'}`} style={{ fontSize: '10px' }}>
+                          {p.is_active ? 'Active' : 'Inactive'}
+                        </span>
+                      </td>
+                      <td style={{ paddingRight: '24px', textAlign: 'right' }}>
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                          <button onClick={() => openEdit(p)}
+                            style={{ width: '32px', height: '32px', borderRadius: '8px', border: 'none', background: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-sec)', transition: 'all 0.2s' }}
+                            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(59,130,246,0.1)'; e.currentTarget.style.color = '#93C5FD' }}
+                            onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = 'var(--text-sec)' }}
+                            title="Edit Product">
+                            <Edit2 size={14} />
+                          </button>
+                          <button onClick={() => toggleActive(p)}
+                            style={{ width: '32px', height: '32px', borderRadius: '8px', border: 'none', background: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-sec)', transition: 'all 0.2s' }}
+                            onMouseEnter={e => { e.currentTarget.style.background = p.is_active ? 'rgba(245,158,11,0.1)' : 'rgba(16,185,129,0.1)'; e.currentTarget.style.color = p.is_active ? '#FCD34D' : '#34D399' }}
+                            onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = 'var(--text-sec)' }}
+                            title={p.is_active ? 'Deactivate Listing' : 'Activate Listing'}>
+                            {p.is_active ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
+                          </button>
+                          <button onClick={() => handleDelete(p.id)}
+                            style={{ width: '32px', height: '32px', borderRadius: '8px', border: 'none', background: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-sec)', transition: 'all 0.2s' }}
+                            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.color = '#FCA5A5' }}
+                            onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = 'var(--text-sec)' }}
+                            title="Delete Product">
+                            <Trash2 size={14} />
+                          </button>
                         </div>
-                      </div>
-                    </td>
-                    <td className="text-slate-400 text-sm">{p.category_name || '—'}</td>
-                    <td className="text-green-400 font-semibold">₹{p.price}/{p.unit}</td>
-                    <td>
-                      <span className={`text-sm font-medium ${p.quantity < 10 ? 'text-red-400' : 'text-white'}`}>
-                        {p.quantity} {p.unit}
-                      </span>
-                    </td>
-                    <td>
-                      {p.ai_suggested_price
-                        ? <span className="ai-chip text-xs">🤖 ₹{p.ai_suggested_price}</span>
-                        : <span className="text-slate-600 text-xs">—</span>}
-                    </td>
-                    <td>
-                      <span className={`badge ${p.is_active ? 'badge-green' : 'badge-red'}`}>
-                        {p.is_active ? 'Active' : 'Inactive'}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="flex items-center gap-1">
-                        <button onClick={() => openEdit(p)}
-                          className="p-2 rounded-lg hover:bg-blue-500/10 text-slate-400 hover:text-blue-400 transition-colors"
-                          title="Edit">
-                          <Edit2 size={15} />
-                        </button>
-                        <button onClick={() => toggleActive(p)}
-                          className={`p-2 rounded-lg transition-colors ${p.is_active ? 'hover:bg-yellow-500/10 text-slate-400 hover:text-yellow-400' : 'hover:bg-green-500/10 text-slate-400 hover:text-green-400'}`}
-                          title={p.is_active ? 'Deactivate' : 'Activate'}>
-                          {p.is_active ? <ToggleRight size={15} /> : <ToggleLeft size={15} />}
-                        </button>
-                        <button onClick={() => handleDelete(p.id)}
-                          className="p-2 rounded-lg hover:bg-red-500/10 text-slate-400 hover:text-red-400 transition-colors"
-                          title="Delete">
-                          <Trash2 size={15} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
         )}
 
-        {/* Modal */}
+        {/* Custom Glassmorphic Add/Edit Modal */}
         {showModal && (
           <div className="modal-overlay" onClick={() => setShowModal(false)}>
-            <div className="modal-box" onClick={e => e.stopPropagation()}>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-bold text-white">{editing ? 'Edit Product' : 'Add New Product'}</h2>
-                <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-white"><X size={20} /></button>
+            <div className="modal-box" onClick={e => e.stopPropagation()} style={{ maxWidth: '560px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '18px', fontWeight: 800, color: '#EEF2FF' }}>
+                  {editing ? 'Edit Listing' : 'Add New Listing'}
+                </h2>
+                <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-sec)', cursor: 'pointer' }}
+                  onMouseEnter={e => e.currentTarget.style.color = '#EEF2FF'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'var(--text-sec)'}>
+                  <X size={20} />
+                </button>
               </div>
-              <form onSubmit={handleSubmit} className="space-y-4">
+
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <label className="block text-xs font-medium text-slate-400 mb-1">Product Name *</label>
-                  <input className="input-field" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required />
+                  <label className="field-label">Product Name *</label>
+                  <input className="input-field" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required placeholder="e.g. Alphonso Mangoes" />
                 </div>
+
                 <div>
-                  <label className="block text-xs font-medium text-slate-400 mb-1">Description *</label>
-                  <textarea className="input-field" rows={3} value={form.description} onChange={e => setForm({...form, description: e.target.value})} required />
+                  <label className="field-label">Description *</label>
+                  <textarea className="input-field" rows={3} value={form.description} onChange={e => setForm({...form, description: e.target.value})} required placeholder="Describe the quality, harvest details, etc." />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">Price (₹) *</label>
-                    <input type="number" className="input-field" value={form.price} onChange={e => setForm({...form, price: e.target.value})} required min="0" step="0.01" />
+                    <label className="field-label">Price (₹) *</label>
+                    <input type="number" className="input-field" value={form.price} onChange={e => setForm({...form, price: e.target.value})} required min="0" step="0.01" placeholder="Price per unit" />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">Unit</label>
+                    <label className="field-label">Unit</label>
                     <select className="input-field" value={form.unit} onChange={e => setForm({...form, unit: e.target.value})}>
                       {UNITS.map(u => <option key={u} value={u}>{u}</option>)}
                     </select>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">Quantity *</label>
-                    <input type="number" className="input-field" value={form.quantity} onChange={e => setForm({...form, quantity: e.target.value})} required min="0" />
+                    <label className="field-label">Quantity Available *</label>
+                    <input type="number" className="input-field" value={form.quantity} onChange={e => setForm({...form, quantity: e.target.value})} required min="0" placeholder="e.g. 150" />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">Category</label>
+                    <label className="field-label">Category</label>
                     <select className="input-field" value={form.category} onChange={e => setForm({...form, category: e.target.value})}>
                       <option value="">Select category</option>
                       {categories.map(c => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
                     </select>
                   </div>
                 </div>
+
                 <div>
-                  <label className="block text-xs font-medium text-slate-400 mb-1">Product Image</label>
-                  <input type="file" accept="image/*" className="input-field"
-                    onChange={e => setForm({...form, image: e.target.files[0]})} />
+                  <label className="field-label">Harvest Date</label>
+                  <input type="date" className="input-field" value={form.harvest_date} onChange={e => setForm({...form, harvest_date: e.target.value})} />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '10px' }}>
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">Harvest Date</label>
-                    <input type="date" className="input-field" value={form.harvest_date} onChange={e => setForm({...form, harvest_date: e.target.value})} />
+                    <label className="field-label">Product Image</label>
+                    <input type="file" accept="image/*" className="input-field"
+                      onChange={e => setForm({...form, image: e.target.files[0]})} />
                   </div>
-                  <div className="flex items-center gap-3 pt-5">
+                  
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 0' }}>
                     <input type="checkbox" id="organic" checked={form.is_organic} onChange={e => setForm({...form, is_organic: e.target.checked})}
-                      className="w-4 h-4 accent-green-500" />
-                    <label htmlFor="organic" className="text-sm text-slate-300 flex items-center gap-1"><Leaf size={13} className="text-green-400" /> Organic</label>
+                      style={{ accentColor: '#10B981', width: '15px', height: '15px', cursor: 'pointer' }} />
+                    <label htmlFor="organic" style={{ fontSize: '13px', fontWeight: 600, color: '#EEF2FF', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+                      <Leaf size={14} style={{ color: '#34D399' }} /> This product is Organic
+                    </label>
                   </div>
                 </div>
-                <button type="submit" className="btn-primary w-full justify-center py-3 mt-2" disabled={saving}>
-                  {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Plus size={16} />}
-                  {saving ? 'Saving...' : (editing ? 'Update Product' : 'Add Product')}
+
+                <button type="submit" className="btn-primary" style={{ justifyContent: 'center', padding: '14px', fontSize: '15px', marginTop: '12px' }} disabled={saving}>
+                  {saving ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <Plus size={16} />
+                  )}
+                  {saving ? 'Saving listing...' : (editing ? 'Update Listing' : 'Publish Listing')}
                 </button>
               </form>
             </div>

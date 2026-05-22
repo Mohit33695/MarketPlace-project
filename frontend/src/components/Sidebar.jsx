@@ -32,8 +32,8 @@ const NAV = {
 
 const ROLE_THEME = {
   farmer: { color: '#10B981', gradient: 'linear-gradient(135deg,#10B981,#059669)', label: 'Farmer Portal', glow: 'rgba(16,185,129,0.35)' },
-  buyer:  { color: '#3B82F6', gradient: 'linear-gradient(135deg,#3B82F6,#2563EB)', label: 'Marketplace',   glow: 'rgba(59,130,246,0.35)' },
-  admin:  { color: '#8B5CF6', gradient: 'linear-gradient(135deg,#8B5CF6,#7C3AED)', label: 'Admin Panel',   glow: 'rgba(139,92,246,0.35)' },
+  buyer:  { color: '#F59E0B', gradient: 'linear-gradient(135deg,#F59E0B,#D97706)', label: 'Marketplace',   glow: 'rgba(245,158,11,0.35)' },
+  admin:  { color: '#34D399', gradient: 'linear-gradient(135deg,#34D399,#10B981)', label: 'Admin Panel',   glow: 'rgba(52,211,153,0.35)' },
 }
 
 export default function Sidebar() {

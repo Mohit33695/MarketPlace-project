@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react'
 import Sidebar from '../../components/Sidebar'
 import api from '../../api/axios'
 import toast from 'react-hot-toast'
-import { Brain, TrendingUp, TrendingDown, Minus, RefreshCw, Zap } from 'lucide-react'
+import { Brain, TrendingUp, TrendingDown, Minus, RefreshCw, Zap, DollarSign, BarChart2 } from 'lucide-react'
 import {
-  LineChart, Line, AreaChart, Area, XAxis, YAxis,
+  AreaChart, Area, XAxis, YAxis,
   CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine
 } from 'recharts'
 
@@ -29,7 +29,8 @@ export default function FarmerAIPricing() {
 
   const fetchAI = async (product) => {
     setLoading(true)
-    setPriceData(null); setDemandData(null)
+    setPriceData(null)
+    setDemandData(null)
     try {
       const [p, d] = await Promise.all([
         api.get(`/ai/price-suggest/${product.id}/`),
@@ -37,138 +38,207 @@ export default function FarmerAIPricing() {
       ])
       setPriceData(p.data)
       setDemandData(d.data)
-    } catch { toast.error('Failed to fetch AI data') }
-    finally { setLoading(false) }
+    } catch { 
+      toast.error('Failed to fetch AI insights') 
+    } finally { 
+      setLoading(false) 
+    }
   }
 
   const TrendIcon = ({ trend }) => {
-    if (trend === 'up') return <TrendingUp size={18} className="text-green-400" />
-    if (trend === 'down') return <TrendingDown size={18} className="text-red-400" />
-    return <Minus size={18} className="text-slate-400" />
+    if (trend === 'up') return <TrendingUp size={18} style={{ color: '#34D399' }} />
+    if (trend === 'down') return <TrendingDown size={18} style={{ color: '#FCA5A5' }} />
+    return <Minus size={18} style={{ color: 'var(--text-muted)' }} />
   }
 
   return (
-    <div className="flex">
+    <div style={{ display: 'flex' }}>
       <Sidebar />
       <main className="page-content">
-        <div className="mb-8 flex items-center justify-between">
+        
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px' }} className="animate-fade-in-up">
           <div>
-            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-              <Brain size={24} className="text-violet-400" /> AI Pricing & Demand
-            </h1>
-            <p className="text-slate-400 text-sm mt-1">AI-powered price suggestions and 7-day demand forecast</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
+              <div style={{ width: '38px', height: '38px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.25)' }}>
+                <Brain size={18} style={{ color: '#C4B5FD' }} />
+              </div>
+              <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '26px', fontWeight: 800, color: '#EEF2FF' }}>
+                AI Pricing & Forecast
+              </h1>
+            </div>
+            <p style={{ color: 'var(--text-sec)', fontSize: '14px', marginLeft: '50px' }}>Real-time ML suggestions and 7-day future demand curves</p>
           </div>
-          <span className="ai-chip"><Zap size={12} /> Powered by ML</span>
+          <span className="ai-chip" style={{ background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.25)', color: '#C4B5FD' }}>
+            <Zap size={11} /> ML Engine Active
+          </span>
         </div>
 
-        <div className="grid grid-cols-12 gap-6">
-          {/* Product selector */}
-          <div className="col-span-3">
-            <div className="glass p-4">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Your Products</p>
-              <div className="space-y-1">
-                {products.map(p => (
+        <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6 items-start">
+          
+          {/* Side Selector Card */}
+          <div className="glass animate-fade-in-up" style={{ padding: '18px', minHeight: '340px' }}>
+            <p style={{ fontSize: '10.5px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '14px' }}>
+              My Products
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {products.map(p => {
+                const isActive = selected?.id === p.id
+                return (
                   <button key={p.id} onClick={() => setSelected(p)}
-                    className={`w-full text-left px-3 py-3 rounded-xl text-sm transition-all ${selected?.id === p.id
-                      ? 'bg-violet-500/15 border border-violet-500/30 text-violet-300'
-                      : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}>
-                    <p className="font-medium truncate">{p.name}</p>
-                    <p className="text-xs opacity-60">₹{p.price}/{p.unit}</p>
+                    style={{
+                      width: '100%', textAlign: 'left', padding: '12px 14px', borderRadius: '14px',
+                      border: '1px solid', cursor: 'pointer', transition: 'all 0.22s',
+                      ...(isActive 
+                        ? { background: 'linear-gradient(135deg, rgba(139,92,246,0.16), rgba(139,92,246,0.06))', color: '#C4B5FD', borderColor: 'rgba(139,92,246,0.25)' }
+                        : { background: 'rgba(255,255,255,0.02)', color: 'var(--text-sec)', borderColor: 'rgba(255,255,255,0.05)' }
+                      )
+                    }}
+                    onMouseEnter={e => {
+                      if (!isActive) {
+                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)';
+                        e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+                        e.currentTarget.style.color = '#EEF2FF';
+                      }
+                    }}
+                    onMouseLeave={e => {
+                      if (!isActive) {
+                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)';
+                        e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+                        e.currentTarget.style.color = 'var(--text-sec)';
+                      }
+                    }}>
+                    <p style={{ fontSize: '13.5px', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '2px' }}>
+                      {p.name}
+                    </p>
+                    <p style={{ fontSize: '11px', opacity: isActive ? 0.95 : 0.6 }}>₹{p.price}/{p.unit}</p>
                   </button>
-                ))}
-              </div>
+                )
+              })}
             </div>
           </div>
 
-          {/* AI results */}
-          <div className="col-span-9 space-y-6">
+          {/* AI Output Cards */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            
             {loading ? (
-              <div className="glass p-16 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="spinner mx-auto mb-4" style={{ borderTopColor: '#8b5cf6' }} />
-                  <p className="text-slate-400 text-sm">AI is analyzing market data...</p>
-                </div>
+              <div className="glass" style={{ padding: '64px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <div className="spinner" style={{ borderTopColor: 'var(--violet)', marginBottom: '16px' }} />
+                <p style={{ color: 'var(--text-sec)', fontSize: '14px' }}>AI is calculating market averages and pricing points...</p>
               </div>
             ) : priceData && (
               <>
-                {/* Price suggestion card */}
-                <div className="glass p-6">
-                  <h3 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
-                    <Brain size={18} className="text-violet-400" /> Price Analysis — {selected?.name}
+                {/* Suggestion Card */}
+                <div className="glass animate-fade-in-up" style={{ padding: '24px' }}>
+                  <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '16px', fontWeight: 800, color: '#EEF2FF', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Brain size={16} style={{ color: '#C4B5FD' }} /> Suggestion Analysis — {selected?.name}
                   </h3>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="text-center p-4 rounded-xl bg-slate-800/60">
-                      <p className="text-xs text-slate-500 mb-1">Current Price</p>
-                      <p className="text-2xl font-bold text-white">₹{priceData.current_price}</p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    
+                    {/* Block 1 */}
+                    <div style={{ padding: '16px', borderRadius: '16px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
+                      <p style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-sec)', marginBottom: '6px' }}>Current Price</p>
+                      <p style={{ fontSize: '24px', fontWeight: 900, color: '#EEF2FF', fontFamily: 'Outfit, sans-serif' }}>
+                        ₹{priceData.current_price}
+                      </p>
+                      <p style={{ fontSize: '10.5px', color: 'var(--text-muted)', marginTop: '2px' }}>per {selected?.unit}</p>
                     </div>
-                    <div className="text-center p-4 rounded-xl" style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)' }}>
-                      <p className="text-xs text-violet-300 mb-1">AI Suggested Price</p>
-                      <p className="text-2xl font-bold text-violet-300">₹{priceData.suggested_price}</p>
+
+                    {/* Block 2 */}
+                    <div style={{ 
+                      padding: '16px', borderRadius: '16px', 
+                      background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.22)', 
+                      textAlign: 'center', boxShadow: 'inset 0 0 16px rgba(139,92,246,0.1)'
+                    }}>
+                      <p style={{ fontSize: '11px', fontWeight: 700, color: '#C4B5FD', marginBottom: '6px' }}>AI Suggested</p>
+                      <p style={{ fontSize: '24px', fontWeight: 900, color: '#C4B5FD', fontFamily: 'Outfit, sans-serif' }}>
+                        ₹{priceData.suggested_price}
+                      </p>
+                      <p style={{ fontSize: '10.5px', color: 'rgba(196,181,253,0.5)', marginTop: '2px' }}>per {selected?.unit}</p>
                     </div>
-                    <div className="text-center p-4 rounded-xl bg-slate-800/60">
-                      <p className="text-xs text-slate-500 mb-1">Trend</p>
-                      <div className="flex items-center justify-center gap-2 mt-1">
+
+                    {/* Block 3 */}
+                    <div style={{ padding: '16px', borderRadius: '16px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
+                      <p style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-sec)', marginBottom: '6px' }}>Market Trend</p>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: '2px' }}>
                         <TrendIcon trend={priceData.trend} />
-                        <span className={`font-semibold text-sm ${priceData.trend === 'up' ? 'text-green-400' : priceData.trend === 'down' ? 'text-red-400' : 'text-slate-400'}`}>
+                        <span style={{ 
+                          fontSize: '15px', fontWeight: 800, textTransform: 'capitalize',
+                          color: priceData.trend === 'up' ? '#34D399' : (priceData.trend === 'down' ? '#FCA5A5' : 'var(--text-sec)') 
+                        }}>
                           {priceData.trend}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 mt-1">Confidence: {priceData.confidence}%</p>
+                      <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Confidence: {priceData.confidence}%</p>
+                    </div>
+
+                  </div>
+
+                  {/* Confidence Slider bar */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', fontSize: '12px' }}>
+                      <span style={{ color: 'var(--text-sec)', fontWeight: 600 }}>Confidence Factor</span>
+                      <span style={{ color: '#C4B5FD', fontWeight: 800 }}>{priceData.confidence}%</span>
+                    </div>
+                    <div style={{ height: '8px', borderRadius: '99px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', overflow: 'hidden' }}>
+                      <div style={{
+                        height: '100%', borderRadius: '99px', transition: 'width 0.6s cubic-bezier(0.25, 0.8, 0.25, 1)',
+                        width: `${priceData.confidence}%`,
+                        background: 'linear-gradient(90deg, #8B5CF6, #3B82F6)',
+                        boxShadow: '0 0 8px rgba(139,92,246,0.6)'
+                      }} />
                     </div>
                   </div>
 
-                  {/* Confidence bar */}
-                  <div className="mt-4">
-                    <div className="flex justify-between text-xs text-slate-400 mb-1">
-                      <span>Model Confidence</span><span>{priceData.confidence}%</span>
-                    </div>
-                    <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
-                      <div className="h-full rounded-full transition-all"
-                        style={{ width: `${priceData.confidence}%`, background: 'linear-gradient(90deg, #8b5cf6, #3b82f6)' }} />
-                    </div>
-                  </div>
                 </div>
 
-                {/* Demand forecast chart */}
+                {/* 7-Day Demand Forecast Card */}
                 {demandData && (
-                  <div className="glass p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-base font-semibold text-white flex items-center gap-2">
-                        <TrendingUp size={18} className="text-green-400" /> 7-Day Demand Forecast
+                  <div className="glass animate-fade-in-up" style={{ padding: '24px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                      <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '16px', fontWeight: 800, color: '#EEF2FF', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <BarChart2 size={16} style={{ color: '#34D399' }} /> 7-Day Demand Forecast
                       </h3>
-                      <div className="flex items-center gap-2">
-                        <span className={`badge ${demandData.demand_level === 'High' ? 'badge-green' : demandData.demand_level === 'Medium' ? 'badge-yellow' : 'badge-red'}`}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span className={`badge ${demandData.demand_level === 'High' ? 'badge-green' : demandData.demand_level === 'Medium' ? 'badge-yellow' : 'badge-red'}`} style={{ fontSize: '10px' }}>
                           {demandData.demand_level} Demand
                         </span>
-                        <span className="text-xs text-slate-500">Avg: {demandData.average_demand}/100</span>
+                        <span style={{ fontSize: '12px', color: 'var(--text-sec)' }}>Avg Score: {demandData.average_demand}/100</span>
                       </div>
                     </div>
-                    <ResponsiveContainer width="100%" height={200}>
-                      <AreaChart data={demandData.forecast}>
-                        <defs>
-                          <linearGradient id="demandGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
-                            <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                        <XAxis dataKey="day" stroke="#94a3b8" tick={{ fontSize: 12 }} />
-                        <YAxis domain={[0, 100]} stroke="#94a3b8" tick={{ fontSize: 12 }} />
-                        <Tooltip contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: 8 }}
-                          formatter={(v) => [`${v}/100`, 'Demand Score']} />
-                        <ReferenceLine y={70} stroke="#22c55e" strokeDasharray="5 5" label={{ value: 'High', fill: '#22c55e', fontSize: 11 }} />
-                        <Area type="monotone" dataKey="demand_score" stroke="#22c55e" fill="url(#demandGrad)" strokeWidth={2} />
-                      </AreaChart>
-                    </ResponsiveContainer>
+
+                    <div style={{ width: '100%', height: 210 }}>
+                      <ResponsiveContainer>
+                        <AreaChart data={demandData.forecast}>
+                          <defs>
+                            <linearGradient id="forecastGlow" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#10B981" stopOpacity={0.25} />
+                              <stop offset="95%" stopColor="#10B981" stopOpacity={0.0} />
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
+                          <XAxis dataKey="day" stroke="var(--text-muted)" tick={{ fontSize: 11, fill: 'var(--text-sec)' }} />
+                          <YAxis domain={[0, 100]} stroke="var(--text-muted)" tick={{ fontSize: 11, fill: 'var(--text-sec)' }} />
+                          <Tooltip contentStyle={{ background: 'rgba(7,19,42,0.92)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, boxShadow: '0 8px 24px rgba(0,0,0,0.35)' }}
+                            labelStyle={{ color: '#EEF2FF', fontWeight: 700 }}
+                            formatter={(v) => [`${v}/100`, 'Demand Index']} />
+                          <ReferenceLine y={70} stroke="#10B981" strokeDasharray="5 5" label={{ value: 'High', fill: '#10B981', fontSize: 10, position: 'top' }} />
+                          <Area type="monotone" dataKey="demand_score" stroke="#34D399" fill="url(#forecastGlow)" strokeWidth={2.5} />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
                   </div>
                 )}
 
-                <button onClick={() => fetchAI(selected)} className="btn-secondary">
-                  <RefreshCw size={15} /> Refresh Analysis
+                <button onClick={() => fetchAI(selected)} className="btn-secondary" style={{ width: 'fit-content', padding: '10px 18px', fontSize: '13px' }}>
+                  <RefreshCw size={14} /> Refresh AI Forecast
                 </button>
               </>
             )}
+
           </div>
+
         </div>
       </main>
     </div>

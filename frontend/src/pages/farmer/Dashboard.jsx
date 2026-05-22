@@ -111,8 +111,7 @@ export default function FarmerDashboard() {
             <div className="spinner" />
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '16px', marginBottom: '32px' }}
-            className="stagger">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 stagger">
             <StatCard icon={DollarSign} label="Total Revenue" value={`₹${(stats?.total_revenue || 0).toLocaleString()}`} color="#10B981" trend={12} />
             <StatCard icon={ShoppingBag} label="Total Orders"   value={stats?.total_orders || 0}     color="#3B82F6"  trend={8} />
             <StatCard icon={Package}    label="Active Products" value={stats?.active_products || 0}   color="#F59E0B" />
@@ -121,7 +120,7 @@ export default function FarmerDashboard() {
         )}
 
         {/* ── Charts ───────────────────────────────────────────────── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '28px' }}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
 
           {/* Revenue area chart */}
           <div className="stat-card">
@@ -212,7 +211,7 @@ export default function FarmerDashboard() {
                 Low Stock Alert — {lowStock.length} product{lowStock.length > 1 ? 's' : ''} need attention
               </p>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '10px' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
               {lowStock.map(p => (
                 <div key={p.id} style={{
                   display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px',

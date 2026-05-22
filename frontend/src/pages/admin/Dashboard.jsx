@@ -85,8 +85,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* ── Stat cards ───────────────────────────────────────────── */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '16px', marginBottom: '28px' }}
-          className="stagger">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 stagger">
           <StatCard icon={Users}       label="Total Farmers"   value={s.total_farmers || 0} sub={`${s.pending_farmers || 0} pending approval`} color="#10B981" />
           <StatCard icon={Users}       label="Total Buyers"    value={s.total_buyers   || 0} color="#3B82F6" />
           <StatCard icon={Package}     label="Active Products" value={s.total_products  || 0} color="#F59E0B" />
@@ -94,7 +93,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* ── Charts row 1 ─────────────────────────────────────────── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: '20px', marginBottom: '20px' }}>
+        <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-6 mb-6">
 
           {/* Revenue area */}
           <div className="stat-card">
@@ -175,8 +174,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* ── Charts row 2 ─────────────────────────────────────────── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
           {/* Orders by status */}
           <div className="stat-card">

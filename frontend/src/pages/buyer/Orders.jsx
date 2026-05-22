@@ -1,14 +1,33 @@
 import { useState, useEffect } from 'react'
 import Sidebar from '../../components/Sidebar'
 import api from '../../api/axios'
-import { ClipboardList, ChevronDown } from 'lucide-react'
+import { ClipboardList, ChevronDown, Calendar, MapPin, Package, Truck, CheckCircle2, ShoppingBag, ShieldCheck, AlertCircle } from 'lucide-react'
 
 const STATUS_COLORS = {
-  pending: 'badge-yellow', confirmed: 'badge-blue', processing: 'badge-blue',
-  shipped: 'badge-purple', delivered: 'badge-green', cancelled: 'badge-red',
+  pending: 'badge-yellow',
+  confirmed: 'badge-blue',
+  processing: 'badge-blue',
+  shipped: 'badge-purple',
+  delivered: 'badge-green',
+  cancelled: 'badge-red',
 }
 
-const STATUS_STEPS = ['pending', 'confirmed', 'processing', 'shipped', 'delivered']
+const STATUS_STEPS = [
+  { key: 'pending', label: 'Pending', icon: ClockIcon },
+  { key: 'confirmed', label: 'Confirmed', icon: ShieldCheck },
+  { key: 'processing', label: 'Processing', icon: Package },
+  { key: 'shipped', label: 'Shipped', icon: Truck },
+  { key: 'delivered', label: 'Delivered', icon: CheckCircle2 },
+]
+
+function ClockIcon(props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width={props.size || 14} height={props.size || 14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={props.style}>
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </svg>
+  )
+}
 
 export default function BuyerOrders() {
   const [orders, setOrders] = useState([])
@@ -16,84 +35,227 @@ export default function BuyerOrders() {
   const [expanded, setExpanded] = useState(null)
 
   useEffect(() => {
-    api.get('/orders/').then(r => setOrders(r.data.results || r.data)).finally(() => setLoading(false))
+    api.get('/orders/')
+      .then(r => setOrders(r.data.results || r.data))
+      .catch(() => {})
+      .finally(() => setLoading(false))
   }, [])
 
   return (
-    <div className="flex">
+    <div style={{ display: 'flex' }}>
       <Sidebar />
       <main className="page-content">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-            <ClipboardList size={24} className="text-blue-400" /> My Orders
-          </h1>
-          <p className="text-slate-400 text-sm mt-1">{orders.length} orders placed</p>
+        
+        {/* ── Header ──────────────────────────────────────────────── */}
+        <div style={{ marginBottom: '28px' }} className="animate-fade-in-up">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
+            <div style={{ width: '38px', height: '38px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.25)' }}>
+              <ClipboardList size={18} style={{ color: '#93C5FD' }} />
+            </div>
+            <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '26px', fontWeight: 800, color: '#EEF2FF' }}>
+              My Orders
+            </h1>
+            {orders.length > 0 && (
+              <span style={{ padding: '4px 12px', borderRadius: '99px', background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.22)', color: '#93C5FD', fontSize: '12px', fontWeight: 800 }}>
+                {orders.length} order{orders.length !== 1 ? 's' : ''}
+              </span>
+            )}
+          </div>
+          <p style={{ color: 'var(--text-sec)', fontSize: '14px', marginLeft: '50px' }}>Track and manage your fresh farm purchases</p>
         </div>
 
-        {loading ? <div className="flex justify-center h-40 items-center"><div className="spinner" /></div>
-          : orders.length === 0 ? (
-            <div className="glass p-16 text-center">
-              <ClipboardList size={48} className="text-slate-600 mx-auto mb-4" />
-              <p className="text-slate-400">No orders yet. Start shopping!</p>
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '160px' }}>
+            <div className="spinner" />
+          </div>
+        ) : orders.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '80px 24px', borderRadius: '24px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ width: '80px', height: '80px', borderRadius: '24px', background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+              <ClipboardList size={36} style={{ color: '#93C5FD' }} />
             </div>
-          ) : (
-            <div className="space-y-3">
-              {orders.map(order => (
-                <div key={order.id} className="glass overflow-hidden">
-                  <div className="p-5 flex items-center justify-between cursor-pointer"
-                    onClick={() => setExpanded(expanded === order.id ? null : order.id)}>
-                    <div className="flex items-center gap-4">
+            <p style={{ fontSize: '18px', fontWeight: 700, color: '#EEF2FF', marginBottom: '8px' }}>No orders yet</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '24px' }}>Your purchase history will appear here once you buy fresh produce</p>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }} className="stagger">
+            {orders.map(order => {
+              const totalAmount = parseFloat(order.total_amount || 0)
+              const formattedDate = new Date(order.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
+              const isExpanded = expanded === order.id
+
+              return (
+                <div key={order.id} className="glass" style={{
+                  overflow: 'hidden',
+                  transition: 'all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1)',
+                  border: isExpanded ? '1px solid rgba(16,185,129,0.22)' : '1px solid rgba(255,255,255,0.06)',
+                  boxShadow: isExpanded ? '0 16px 36px rgba(0,0,0,0.3)' : 'none',
+                }}>
+                  {/* Order header row */}
+                  <div style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '20px 24px', cursor: 'pointer',
+                    background: isExpanded ? 'rgba(255,255,255,0.015)' : 'transparent',
+                    flexWrap: 'wrap', gap: '16px'
+                  }} onClick={() => setExpanded(isExpanded ? null : order.id)}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', minWidth: '220px' }}>
+                      <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <ShoppingBag size={18} style={{ color: 'var(--text-sec)' }} />
+                      </div>
                       <div>
-                        <p className="font-semibold text-white text-sm">Order #{order.id}</p>
-                        <p className="text-xs text-slate-400">{new Date(order.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
+                          <p style={{ fontWeight: 800, fontSize: '15px', color: '#EEF2FF' }}>Order #{order.id}</p>
+                          <span className={`badge ${STATUS_COLORS[order.status] || 'badge-blue'}`} style={{ fontSize: '10px' }}>
+                            {order.status}
+                          </span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: '12px' }}>
+                          <Calendar size={12} />
+                          <span>{formattedDate}</span>
+                        </div>
                       </div>
-                      <span className={`badge ${STATUS_COLORS[order.status] || 'badge-blue'}`}>{order.status}</span>
                     </div>
-                    <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        <p className="font-bold text-green-400">₹{parseFloat(order.total_amount).toLocaleString()}</p>
-                        <p className="text-xs text-slate-500">{order.item_count} items</p>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+                      <div style={{ textAlign: 'right' }}>
+                        <p style={{ fontSize: '18px', fontWeight: 900, color: '#34D399', fontFamily: 'Outfit, sans-serif' }}>
+                          ₹{totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                        </p>
+                        <p style={{ fontSize: '12px', color: 'var(--text-sec)' }}>{order.item_count} items</p>
                       </div>
-                      <ChevronDown size={16} className={`text-slate-400 transition-transform ${expanded === order.id ? 'rotate-180' : ''}`} />
+                      <div style={{
+                        width: '28px', height: '28px', borderRadius: '50%',
+                        background: isExpanded ? 'rgba(16,185,129,0.1)' : 'rgba(255,255,255,0.03)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        color: isExpanded ? '#34D399' : 'var(--text-sec)',
+                        transition: 'all 0.2s',
+                      }}>
+                        <ChevronDown size={15} style={{ transform: isExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                      </div>
                     </div>
                   </div>
 
-                  {expanded === order.id && (
-                    <div className="border-t border-slate-700 p-5">
-                      {/* Progress tracker */}
-                      {order.status !== 'cancelled' && (
-                        <div className="flex items-center gap-1 mb-6 overflow-x-auto pb-2">
-                          {STATUS_STEPS.map((step, i) => {
-                            const currentIdx = STATUS_STEPS.indexOf(order.status)
-                            const done = i <= currentIdx
-                            return (
-                              <div key={step} className="flex items-center gap-1 flex-shrink-0">
-                                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${done ? 'bg-green-500 border-green-500 text-white' : 'border-slate-600 text-slate-500'}`}>
-                                  {done ? '✓' : i + 1}
+                  {/* Expanded Detail Panel */}
+                  {isExpanded && (
+                    <div style={{
+                      padding: '24px', borderTop: '1px solid rgba(255,255,255,0.06)',
+                      background: 'rgba(7,19,42,0.2)'
+                    }} className="animate-fade-in-up">
+                      
+                      {/* Step Progress Tracker */}
+                      {order.status !== 'cancelled' ? (
+                        <div style={{ marginBottom: '28px' }}>
+                          <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '14px' }}>
+                            Delivery Status
+                          </p>
+                          <div style={{ display: 'flex', alignItems: 'center', overflowX: 'auto', paddingBottom: '10px', gap: '8px' }}>
+                            {STATUS_STEPS.map((step, idx) => {
+                              const currentIdx = STATUS_STEPS.findIndex(s => s.key === order.status)
+                              const isCompleted = idx <= currentIdx
+                              const isActive = idx === currentIdx
+                              const StepIcon = step.icon
+
+                              return (
+                                <div key={step.key} style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+                                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                                    <div style={{
+                                      width: '32px', height: '32px', borderRadius: '50%',
+                                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                      fontSize: '12px', fontWeight: 800, transition: 'all 0.3s',
+                                      background: isCompleted ? 'rgba(16,185,129,0.15)' : 'rgba(255,255,255,0.03)',
+                                      border: isCompleted 
+                                        ? (isActive ? '2px solid #34D399' : '1px solid rgba(52,211,153,0.4)')
+                                        : '1px solid rgba(255,255,255,0.08)',
+                                      color: isCompleted ? '#34D399' : 'var(--text-sec)',
+                                      boxShadow: isActive ? '0 0 12px rgba(52,211,153,0.3)' : 'none'
+                                    }}>
+                                      {isCompleted && !isActive ? '✓' : <StepIcon size={14} />}
+                                    </div>
+                                    <span style={{
+                                      fontSize: '11px', fontWeight: isCompleted ? 700 : 500,
+                                      color: isCompleted ? (isActive ? '#34D399' : '#EEF2FF') : 'var(--text-muted)'
+                                    }}>{step.label}</span>
+                                  </div>
+                                  {idx < STATUS_STEPS.length - 1 && (
+                                    <div style={{
+                                      width: '40px', height: '2px', margin: '0 8px',
+                                      background: idx < currentIdx ? '#10B981' : 'rgba(255,255,255,0.07)',
+                                      alignSelf: 'flex-start', marginTop: '16px'
+                                    }} />
+                                  )}
                                 </div>
-                                <span className={`text-xs capitalize ${done ? 'text-green-400' : 'text-slate-500'}`}>{step}</span>
-                                {i < STATUS_STEPS.length - 1 && <div className={`w-8 h-0.5 mx-1 ${i < currentIdx ? 'bg-green-500' : 'bg-slate-700'}`} />}
-                              </div>
-                            )
-                          })}
+                              )
+                            })}
+                          </div>
+                        </div>
+                      ) : (
+                        <div style={{
+                          display: 'flex', alignItems: 'center', gap: '8px',
+                          padding: '12px 16px', borderRadius: '12px',
+                          background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)',
+                          color: '#FCA5A5', fontSize: '13px', fontWeight: 600, marginBottom: '24px'
+                        }}>
+                          <AlertCircle size={16} />
+                          <span>This order has been cancelled.</span>
                         </div>
                       )}
 
-                      <div className="space-y-2 mb-4">
-                        {order.items.map(item => (
-                          <div key={item.id} className="flex justify-between text-sm">
-                            <span className="text-slate-300">{item.product_name} × {item.quantity} {item.unit}</span>
-                            <span className="text-white font-medium">₹{(item.price_at_purchase * item.quantity).toFixed(2)}</span>
+                      {/* Items and Address grid */}
+                      <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
+                        
+                        {/* Items list */}
+                        <div>
+                          <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '12px' }}>
+                            Items Ordered
+                          </p>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            {order.items?.map(item => (
+                              <div key={item.id} style={{
+                                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                                padding: '12px 16px', borderRadius: '12px',
+                                background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)'
+                              }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                  <span style={{ fontSize: '20px' }}>🌾</span>
+                                  <div>
+                                    <p style={{ fontSize: '13px', fontWeight: 700, color: '#EEF2FF' }}>{item.product_name}</p>
+                                    <p style={{ fontSize: '11px', color: 'var(--text-sec)' }}>₹{item.price_at_purchase}/{item.unit} × {item.quantity}</p>
+                                  </div>
+                                </div>
+                                <p style={{ fontSize: '14px', fontWeight: 800, color: '#34D399', fontFamily: 'Outfit, sans-serif' }}>
+                                  ₹{(item.price_at_purchase * item.quantity).toFixed(2)}
+                                </p>
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        </div>
+
+                        {/* Delivery Details */}
+                        <div style={{ borderRadius: '16px', padding: '18px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                          <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '12px' }}>
+                            Delivery Information
+                          </p>
+                          <div style={{ display: 'flex', gap: '8px', color: 'var(--text-sec)', fontSize: '12px', lineHeight: 1.4 }}>
+                            <MapPin size={14} style={{ color: 'var(--blue-light)', flexShrink: 0, marginTop: '2px' }} />
+                            <div>
+                              <p style={{ fontWeight: 600, color: '#EEF2FF', marginBottom: '4px' }}>Delivery Address</p>
+                              <p style={{ color: 'var(--text-sec)' }}>
+                                {order.delivery_address}
+                                {order.delivery_city ? `, ${order.delivery_city}` : ''}
+                                {order.delivery_pincode ? ` - ${order.delivery_pincode}` : ''}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
-                      <p className="text-xs text-slate-500">📍 {order.delivery_address}{order.delivery_city ? `, ${order.delivery_city}` : ''}</p>
+
                     </div>
                   )}
                 </div>
-              ))}
-            </div>
-          )}
+              )
+            })}
+          </div>
+        )}
       </main>
     </div>
   )

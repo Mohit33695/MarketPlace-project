@@ -4,14 +4,14 @@
 
 /* ─── Design Tokens ──────────────────────────────────────────────── */
 :root {
-  --bg:          #040D1C;
-  --surface-1:   #07132A;
-  --surface-2:   #0C1D3A;
-  --surface-3:   #122447;
+  --bg:          #060C08; /* Premium ultra-dark forest/emerald-black */
+  --surface-1:   #0B150F; /* Sleek rich dark green-gray surface */
+  --surface-2:   #112117; /* Secondary organic dark green surface */
+  --surface-3:   #182F21; /* Highlight organic green-gray surface */
 
-  --border:      rgba(255, 255, 255, 0.055);
-  --border-mid:  rgba(255, 255, 255, 0.10);
-  --border-hi:   rgba(255, 255, 255, 0.18);
+  --border:      rgba(255, 255, 255, 0.05);
+  --border-mid:  rgba(255, 255, 255, 0.09);
+  --border-hi:   rgba(255, 255, 255, 0.16);
 
   --green:       #10B981;
   --green-dark:  #059669;
@@ -22,9 +22,9 @@
   --amber-light: #FCD34D;
   --amber-glow:  rgba(245, 158, 11, 0.15);
 
-  --blue:        #3B82F6;
-  --blue-light:  #93C5FD;
-  --blue-glow:   rgba(59, 130, 246, 0.15);
+  --blue:        #0EA5E9; /* Premium Sky Blue instead of generic primary blue */
+  --blue-light:  #38BDF8;
+  --blue-glow:   rgba(14, 165, 233, 0.15);
 
   --violet:      #8B5CF6;
   --violet-light:#C4B5FD;
@@ -33,9 +33,9 @@
   --red:         #EF4444;
   --red-light:   #FCA5A5;
 
-  --text:        #EEF2FF;
-  --text-sec:    #8BA3C4;
-  --text-muted:  #3E5578;
+  --text:        #F3F4F6; /* Brighter, cleaner text */
+  --text-sec:    #9CA3AF; /* Muted stone gray */
+  --text-muted:  #4B5563; /* Darker slate gray for labels */
 
   --sidebar-w:   272px;
   --radius-sm:   10px;
@@ -57,9 +57,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-image:
-    radial-gradient(ellipse 80% 50% at 10% 15%,  rgba(16,185,129,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 90% 80%,  rgba(139,92,246,0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 30% at 50% 110%, rgba(59,130,246,0.04) 0%, transparent 50%);
+    radial-gradient(ellipse 80% 50% at 10% 15%,  rgba(16,185,129,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 80%,  rgba(52,211,153,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 30% at 50% 110%, rgba(245,158,11,0.03) 0%, transparent 50%);
 }
 
 h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', sans-serif; }
@@ -88,7 +88,7 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', sans-serif; }
 
 /* ─── Glass card ──────────────────────────────────────────────────── */
 .glass {
-  background: rgba(12, 29, 58, 0.65);
+  background: rgba(17, 33, 23, 0.65); /* Styled in premium organic dark green glass */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border);
