@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import Sidebar from '../../components/Sidebar'
+import Header from '../../components/Header'
 import api from '../../api/axios'
 import toast from 'react-hot-toast'
 import { useAuth } from '../../context/AuthContext'
@@ -62,18 +63,27 @@ export default function ProductDetail() {
     }
   }
 
-  if (loading) return <div className="flex"><Sidebar /><div className="page-content flex items-center justify-center h-screen"><div className="spinner" /></div></div>
+  if (loading) return (
+    <div className="page-shell">
+      <Sidebar />
+      <div className="page-content">
+        <Header title="Product" />
+        <div className="content-area" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '50vh' }}>
+          <div className="spinner" />
+        </div>
+      </div>
+    </div>
+  )
   if (!product) return null
 
   const avgRating = reviews.length ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1) : 0
 
   return (
-    <div className="flex">
+    <div className="page-shell">
       <Sidebar />
-      <main className="page-content">
-        <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-400 hover:text-white text-sm mb-6 transition-colors">
-          <ArrowLeft size={16} /> Back to Marketplace
-        </button>
+      <div className="page-content">
+        <Header title={product?.name || 'Product Detail'} />
+        <div className="content-area">
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Image */}
@@ -225,7 +235,8 @@ export default function ProductDetail() {
             </form>
           </div>
         )}
-      </main>
+        </div>
+      </div>
     </div>
   )
 }

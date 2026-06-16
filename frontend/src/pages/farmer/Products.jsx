@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Sidebar from '../../components/Sidebar'
+import Header from '../../components/Header'
 import api from '../../api/axios'
 import toast from 'react-hot-toast'
 import { Plus, Edit2, Trash2, X, Package, Leaf, ToggleLeft, ToggleRight, Info, AlertTriangle, Calendar, DollarSign } from 'lucide-react'
@@ -84,32 +85,18 @@ export default function FarmerProducts() {
   }
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div className="page-shell">
       <Sidebar />
-      <main className="page-content">
-
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px' }} className="animate-fade-in-up">
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
-              <div style={{ width: '38px', height: '38px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.25)' }}>
-                <Package size={18} style={{ color: '#34D399' }} />
-              </div>
-              <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '26px', fontWeight: 800, color: '#EEF2FF' }}>
-                My Listings
-              </h1>
-              {products.length > 0 && (
-                <span style={{ padding: '4px 12px', borderRadius: '99px', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.22)', color: '#34D399', fontSize: '12px', fontWeight: 800 }}>
-                  {products.length} listed
-                </span>
-              )}
-            </div>
-            <p style={{ color: 'var(--text-sec)', fontSize: '14px', marginLeft: '50px' }}>Manage your product listings and view market rates</p>
-          </div>
-          <button className="btn-primary" onClick={openAdd} style={{ fontSize: '13px' }}>
-            <Plus size={16} /> Add Product
-          </button>
-        </div>
+      <div className="page-content">
+        <Header
+          title="My Products"
+          actions={
+            <button className="btn-primary" onClick={openAdd} style={{ fontSize: '13px' }}>
+              <Plus size={15} /> Add Product
+            </button>
+          }
+        />
+        <div className="content-area">
 
         {loading ? (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '160px' }}>
@@ -321,7 +308,8 @@ export default function FarmerProducts() {
             </div>
           </div>
         )}
-      </main>
+        </div>
+      </div>
     </div>
   )
 }
