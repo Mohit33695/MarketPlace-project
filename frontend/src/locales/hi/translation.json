@@ -1,0 +1,15 @@
+{
+  "dashboard": "डैशबोर्ड",
+  "myProducts": "मेरे उत्पाद",
+  "inventory": "इन्वेंटरी",
+  "orders": "ऑर्डर",
+  "aiPricing": "AI मूल्य निर्धारण",
+  "myProfile": "मेरी प्रोफ़ाइल",
+  "signOut": "साइन आउट",
+  "totalRevenue": "कुल राजस्व",
+  "totalOrders": "कुल ऑर्डर",
+  "activeProducts": "सक्रिय उत्पाद",
+  "avgRating": "औसत रेटिंग",
+  "farmerPortal": "किसान पोर्टल",
+  "goodEvening": "शुभ संध्या"
+}
