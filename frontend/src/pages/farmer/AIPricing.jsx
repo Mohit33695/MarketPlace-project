@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Sidebar from '../../components/Sidebar'
+import Header from '../../components/Header'
 import api from '../../api/axios'
 import toast from 'react-hot-toast'
 import { Brain, TrendingUp, TrendingDown, Minus, RefreshCw, Zap, DollarSign, BarChart2 } from 'lucide-react'
@@ -52,27 +53,14 @@ export default function FarmerAIPricing() {
   }
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div className="page-shell">
       <Sidebar />
-      <main className="page-content">
-        
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px' }} className="animate-fade-in-up">
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
-              <div style={{ width: '38px', height: '38px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.25)' }}>
-                <Brain size={18} style={{ color: '#C4B5FD' }} />
-              </div>
-              <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '26px', fontWeight: 800, color: '#EEF2FF' }}>
-                AI Pricing & Forecast
-              </h1>
-            </div>
-            <p style={{ color: 'var(--text-sec)', fontSize: '14px', marginLeft: '50px' }}>Real-time ML suggestions and 7-day future demand curves</p>
-          </div>
-          <span className="ai-chip" style={{ background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.25)', color: '#C4B5FD' }}>
-            <Zap size={11} /> ML Engine Active
-          </span>
-        </div>
+      <div className="page-content">
+        <Header
+          title="AI Pricing & Forecast"
+          actions={<span className="ai-chip"><Zap size={11} /> ML Engine Active</span>}
+        />
+        <div className="content-area">
 
         <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6 items-start">
           
@@ -240,7 +228,8 @@ export default function FarmerAIPricing() {
           </div>
 
         </div>
-      </main>
+        </div>
+      </div>
     </div>
   )
 }

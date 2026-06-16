@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Sidebar from '../../components/Sidebar'
+import Header from '../../components/Header'
 import api from '../../api/axios'
 import { Warehouse, AlertTriangle, RefreshCw, CheckCircle2 } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -35,27 +36,18 @@ export default function FarmerInventory() {
   }
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div className="page-shell">
       <Sidebar />
-      <main className="page-content">
-        
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px' }} className="animate-fade-in-up">
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
-              <div style={{ width: '38px', height: '38px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.25)' }}>
-                <Warehouse size={18} style={{ color: '#FCD34D' }} />
-              </div>
-              <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '26px', fontWeight: 800, color: '#EEF2FF' }}>
-                Inventory Management
-              </h1>
-            </div>
-            <p style={{ color: 'var(--text-sec)', fontSize: '14px', marginLeft: '50px' }}>Monitor stock levels and quickly replenish your items</p>
-          </div>
-          <button onClick={fetchInventory} className="btn-secondary" style={{ padding: '8px 16px', fontSize: '12px' }}>
-            <RefreshCw size={13} /> Refresh
-          </button>
-        </div>
+      <div className="page-content">
+        <Header
+          title="Inventory"
+          actions={
+            <button onClick={fetchInventory} className="btn-secondary" style={{ padding: '8px 16px', fontSize: '12px' }}>
+              <RefreshCw size={13} /> Refresh
+            </button>
+          }
+        />
+        <div className="content-area">
 
         {loading ? (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '160px' }}>
@@ -159,7 +151,8 @@ export default function FarmerInventory() {
             </table>
           </div>
         )}
-      </main>
+        </div>
+      </div>
     </div>
   )
 }

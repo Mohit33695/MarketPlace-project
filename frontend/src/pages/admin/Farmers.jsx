@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Sidebar from '../../components/Sidebar'
+import Header from '../../components/Header'
 import api from '../../api/axios'
 import toast from 'react-hot-toast'
 import { UserCheck, CheckCircle, XCircle, Clock, MapPin, Phone, Search } from 'lucide-react'
@@ -37,37 +38,11 @@ export default function AdminFarmers() {
   const approvedCount = farmers.filter(f => f.is_approved).length
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div className="page-shell">
       <Sidebar />
-      <main className="page-content">
-
-        {/* ── Header ──────────────────────────────────────────────── */}
-        <div style={{ marginBottom: '28px' }} className="animate-fade-in-up">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '6px' }}>
-            <div style={{ width: '38px', height: '38px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.25)' }}>
-              <UserCheck size={18} style={{ color: '#34D399' }} />
-            </div>
-            <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '26px', fontWeight: 800, color: '#EEF2FF' }}>
-              Farmer Management
-            </h1>
-          </div>
-          <div style={{ display: 'flex', gap: '20px', paddingLeft: '50px' }}>
-            <div>
-              <p style={{ fontSize: '20px', fontWeight: 800, color: '#EEF2FF', fontFamily: 'Outfit, sans-serif' }}>{farmers.length}</p>
-              <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Total farmers</p>
-            </div>
-            <div style={{ width: '1px', background: 'rgba(255,255,255,0.06)' }} />
-            <div>
-              <p style={{ fontSize: '20px', fontWeight: 800, color: '#FCD34D', fontFamily: 'Outfit, sans-serif' }}>{pendingCount}</p>
-              <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Pending review</p>
-            </div>
-            <div style={{ width: '1px', background: 'rgba(255,255,255,0.06)' }} />
-            <div>
-              <p style={{ fontSize: '20px', fontWeight: 800, color: '#34D399', fontFamily: 'Outfit, sans-serif' }}>{approvedCount}</p>
-              <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Verified</p>
-            </div>
-          </div>
-        </div>
+      <div className="page-content">
+        <Header title="Farmer Management" />
+        <div className="content-area">
 
         {/* ── Pending alert ────────────────────────────────────────── */}
         {pendingCount > 0 && (
@@ -202,7 +177,8 @@ export default function AdminFarmers() {
             })}
           </div>
         )}
-      </main>
+        </div>
+      </div>
     </div>
   )
 }

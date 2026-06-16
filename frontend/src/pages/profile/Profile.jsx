@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Sidebar from '../../components/Sidebar'
+import Header from '../../components/Header'
 import api from '../../api/axios'
 import toast from 'react-hot-toast'
 import { useAuth } from '../../context/AuthContext'
@@ -62,22 +63,11 @@ export default function Profile() {
   })
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div className="page-shell">
       <Sidebar />
-      <main className="page-content">
-        
-        {/* Header */}
-        <div style={{ marginBottom: '28px' }} className="animate-fade-in-up">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
-            <div style={{ width: '38px', height: '38px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.25)' }}>
-              <User size={18} style={{ color: '#34D399' }} />
-            </div>
-            <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '26px', fontWeight: 800, color: '#EEF2FF' }}>
-              My Profile
-            </h1>
-          </div>
-          <p style={{ color: 'var(--text-sec)', fontSize: '14px', marginLeft: '50px' }}>Manage your account settings and contact preferences</p>
-        </div>
+      <div className="page-content">
+        <Header title="My Profile" />
+        <div className="content-area">
 
         <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6 items-start">
           
@@ -252,7 +242,8 @@ export default function Profile() {
           </div>
 
         </div>
-      </main>
+        </div>
+      </div>
     </div>
   )
 }

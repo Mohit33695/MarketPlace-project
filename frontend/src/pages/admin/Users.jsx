@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Sidebar from '../../components/Sidebar'
+import Header from '../../components/Header'
 import api from '../../api/axios'
 import { Users, Search, ShieldCheck, Mail, Calendar } from 'lucide-react'
 
@@ -34,24 +35,11 @@ export default function AdminUsers() {
   users.forEach(u => { counts[u.role] = (counts[u.role] || 0) + 1 })
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div className="page-shell">
       <Sidebar />
-      <main className="page-content">
-
-        {/* ── Header ──────────────────────────────────────────────── */}
-        <div style={{ marginBottom: '28px' }} className="animate-fade-in-up">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '6px' }}>
-            <div style={{ width: '38px', height: '38px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.25)' }}>
-              <Users size={18} style={{ color: '#93C5FD' }} />
-            </div>
-            <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '26px', fontWeight: 800, color: '#EEF2FF' }}>
-              User Management
-            </h1>
-          </div>
-          <p style={{ color: 'var(--text-muted)', fontSize: '13px', paddingLeft: '50px' }}>
-            {users.length} registered accounts across all roles
-          </p>
-        </div>
+      <div className="page-content">
+        <Header title="User Management" />
+        <div className="content-area">
 
         {/* ── Role tab filters ─────────────────────────────────────── */}
         <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
@@ -171,7 +159,8 @@ export default function AdminUsers() {
             )}
           </div>
         )}
-      </main>
+        </div>
+      </div>
     </div>
   )
 }

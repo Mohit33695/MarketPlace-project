@@ -16,17 +16,17 @@ export default function ProductCard({ product, onAddToCart, onClick }) {
   return (
     <div className="product-card" onClick={onClick}>
 
-      {/* Image / thumbnail */}
-      <div style={{ position: 'relative', height: '180px', overflow: 'hidden', background: 'var(--surface-3)' }}>
+      {/* ── Image / thumbnail ── */}
+      <div style={{ position: 'relative', height: '196px', overflow: 'hidden', background: 'var(--surface-3)' }}>
         {product.image_url ? (
           <img src={product.image_url} alt={product.name}
-            style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
-            onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06)'}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }}
+            onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.07)'}
             onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
         ) : (
           <div style={{
             width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '56px',
+            fontSize: '60px',
             background: 'linear-gradient(145deg, var(--surface-3), var(--surface-2))',
           }}>
             {emoji}
@@ -36,18 +36,18 @@ export default function ProductCard({ product, onAddToCart, onClick }) {
         {/* Gradient overlay */}
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(to top, rgba(4,13,28,0.6) 0%, transparent 60%)',
+          background: 'linear-gradient(to top, rgba(6,12,8,0.65) 0%, transparent 55%)',
           pointerEvents: 'none',
         }} />
 
-        {/* Badges */}
-        <div style={{ position: 'absolute', top: '10px', left: '10px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+        {/* Top-left badges */}
+        <div style={{ position: 'absolute', top: '10px', left: '10px', display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
           {product.is_organic && (
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: '4px',
-              padding: '4px 10px', borderRadius: '99px', fontSize: '10px', fontWeight: 700,
-              background: 'rgba(16,185,129,0.85)', color: '#fff',
-              backdropFilter: 'blur(8px)', letterSpacing: '0.03em',
+              padding: '3px 9px', borderRadius: '99px', fontSize: '10px', fontWeight: 700,
+              background: 'rgba(16,185,129,0.88)', color: '#fff',
+              backdropFilter: 'blur(8px)', letterSpacing: '0.02em',
             }}>
               <Leaf size={9} /> Organic
             </span>
@@ -55,11 +55,11 @@ export default function ProductCard({ product, onAddToCart, onClick }) {
           {hasAISuggestion && (
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: '4px',
-              padding: '4px 10px', borderRadius: '99px', fontSize: '10px', fontWeight: 700,
-              background: 'rgba(139,92,246,0.85)', color: '#fff',
+              padding: '3px 9px', borderRadius: '99px', fontSize: '10px', fontWeight: 700,
+              background: 'rgba(139,92,246,0.88)', color: '#fff',
               backdropFilter: 'blur(8px)',
             }}>
-              <Zap size={9} /> AI Price
+              <Zap size={9} /> AI
             </span>
           )}
         </div>
@@ -67,9 +67,9 @@ export default function ProductCard({ product, onAddToCart, onClick }) {
         {/* Unit tag */}
         <span style={{
           position: 'absolute', top: '10px', right: '10px',
-          padding: '4px 10px', borderRadius: '99px',
-          background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(8px)',
-          color: '#EEF2FF', fontSize: '11px', fontWeight: 700, letterSpacing: '0.03em',
+          padding: '3px 9px', borderRadius: '99px',
+          background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)',
+          color: '#E2E8F0', fontSize: '11px', fontWeight: 600, letterSpacing: '0.02em',
         }}>
           /{product.unit}
         </span>
@@ -78,27 +78,33 @@ export default function ProductCard({ product, onAddToCart, onClick }) {
         {isOutOfStock && (
           <div style={{
             position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: 'rgba(4,13,28,0.65)', backdropFilter: 'blur(4px)',
+            background: 'rgba(6,12,8,0.7)', backdropFilter: 'blur(4px)',
           }}>
-            <span style={{ padding: '8px 20px', borderRadius: '99px', background: 'rgba(239,68,68,0.85)', color: '#fff', fontSize: '13px', fontWeight: 800 }}>
+            <span style={{ padding: '7px 18px', borderRadius: '99px', background: 'rgba(239,68,68,0.88)', color: '#fff', fontSize: '12px', fontWeight: 800, letterSpacing: '0.03em' }}>
               Out of Stock
             </span>
           </div>
         )}
       </div>
 
-      {/* Info */}
-      <div style={{ padding: '16px' }}>
-        <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '5px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+      {/* ── Info section ── */}
+      <div style={{ padding: '16px 18px 18px' }}>
+        {/* Category & farm */}
+        <p style={{ fontSize: '10.5px', color: 'var(--text-muted)', marginBottom: '5px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em' }}>
           {product.category_name} · {product.farmer_farm || product.farmer_name}
         </p>
-        <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#EEF2FF', marginBottom: '10px', lineHeight: '1.3',
-          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+
+        {/* Product name */}
+        <h3 style={{
+          fontSize: '15px', fontWeight: 700, color: '#EEF2FF', marginBottom: '10px',
+          lineHeight: '1.35', letterSpacing: '-0.01em',
+          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+        }}>
           {product.name}
         </h3>
 
         {/* Star rating */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '14px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '14px' }}>
           <div style={{ display: 'flex', gap: '2px' }}>
             {[1,2,3,4,5].map(s => (
               <Star key={s} size={11}
@@ -106,7 +112,7 @@ export default function ProductCard({ product, onAddToCart, onClick }) {
                   fill: s <= Math.round(avgRating) ? '#F59E0B' : 'transparent' }} />
             ))}
           </div>
-          <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>
+          <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 500 }}>
             {avgRating > 0 ? avgRating.toFixed(1) : '—'} ({product.review_count})
           </span>
         </div>
@@ -114,11 +120,11 @@ export default function ProductCard({ product, onAddToCart, onClick }) {
         {/* Price row */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
           <div>
-            <span style={{ fontSize: '22px', fontWeight: 800, color: '#34D399', fontFamily: 'Outfit, sans-serif', lineHeight: 1 }}>
+            <span style={{ fontSize: '22px', fontWeight: 800, color: '#34D399', fontFamily: 'Outfit, sans-serif', lineHeight: 1, letterSpacing: '-0.02em' }}>
               ₹{parseFloat(product.price).toLocaleString()}
             </span>
             {hasAISuggestion && (
-              <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginLeft: '6px', textDecoration: 'line-through' }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginLeft: '7px', textDecoration: 'line-through' }}>
                 ₹{parseFloat(product.ai_suggested_price).toLocaleString()}
               </span>
             )}
@@ -127,14 +133,14 @@ export default function ProductCard({ product, onAddToCart, onClick }) {
             <button
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '5px',
-                padding: '8px 14px', borderRadius: '10px', border: 'none', cursor: 'pointer',
+                padding: '8px 13px', borderRadius: '10px', border: 'none', cursor: 'pointer',
                 background: 'linear-gradient(135deg,#10B981,#059669)',
                 color: '#fff', fontSize: '12px', fontWeight: 700,
-                boxShadow: '0 4px 12px rgba(16,185,129,0.3)',
+                boxShadow: '0 3px 10px rgba(16,185,129,0.28)',
                 transition: 'all 0.2s', flexShrink: 0,
               }}
-              onMouseEnter={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow='0 8px 20px rgba(16,185,129,0.45)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='0 4px 12px rgba(16,185,129,0.3)'; }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 18px rgba(16,185,129,0.42)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 3px 10px rgba(16,185,129,0.28)'; }}
               onClick={(e) => { e.stopPropagation(); onAddToCart(product) }}
             >
               <ShoppingCart size={13} /> Add
@@ -143,31 +149,26 @@ export default function ProductCard({ product, onAddToCart, onClick }) {
         </div>
 
         {/* Stock indicator */}
-        <div style={{ marginTop: '10px' }}>
-          {isOutOfStock ? null : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        {!isOutOfStock && (
+          <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ flex: 1, height: '3px', borderRadius: '99px', background: 'rgba(255,255,255,0.05)', overflow: 'hidden' }}>
               <div style={{
-                flex: 1, height: '3px', borderRadius: '99px',
-                background: 'rgba(255,255,255,0.06)', overflow: 'hidden'
-              }}>
-                <div style={{
-                  height: '100%', borderRadius: '99px',
-                  width: `${Math.min((product.quantity / 200) * 100, 100)}%`,
-                  background: isLowStock
-                    ? 'linear-gradient(90deg,#F59E0B,#D97706)'
-                    : 'linear-gradient(90deg,#10B981,#059669)',
-                  transition: 'width 0.5s ease',
-                }} />
-              </div>
-              <span style={{
-                fontSize: '11px', fontWeight: 600, flexShrink: 0,
-                color: isLowStock ? '#FCD34D' : 'var(--text-muted)',
-              }}>
-                {isLowStock ? `⚠ ${product.quantity} left` : `${product.quantity} ${product.unit}`}
-              </span>
+                height: '100%', borderRadius: '99px',
+                width: `${Math.min((product.quantity / 200) * 100, 100)}%`,
+                background: isLowStock
+                  ? 'linear-gradient(90deg,#F59E0B,#D97706)'
+                  : 'linear-gradient(90deg,#10B981,#059669)',
+                transition: 'width 0.5s ease',
+              }} />
             </div>
-          )}
-        </div>
+            <span style={{
+              fontSize: '10.5px', fontWeight: 600, flexShrink: 0,
+              color: isLowStock ? '#FCD34D' : 'var(--text-muted)',
+            }}>
+              {isLowStock ? `⚠ ${product.quantity} left` : `${product.quantity} ${product.unit}`}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   )
