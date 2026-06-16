@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Sidebar from '../../components/Sidebar'
+import Header from '../../components/Header'
 import api from '../../api/axios'
 import toast from 'react-hot-toast'
 import { ShoppingBag, ChevronDown, MapPin, Package, ArrowRight } from 'lucide-react'
@@ -36,39 +37,31 @@ export default function FarmerOrders() {
   const totalRev  = orders.filter(o => o.status === 'delivered').reduce((s, o) => s + parseFloat(o.total_amount), 0)
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div className="page-shell">
       <Sidebar />
-      <main className="page-content">
+      <div className="page-content">
+        <Header title="Orders" />
+        <div className="content-area">
 
-        {/* ── Header ──────────────────────────────────────────────── */}
-        <div style={{ marginBottom: '28px' }} className="animate-fade-in-up">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
-            <div style={{ width: '38px', height: '38px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.25)' }}>
-              <ShoppingBag size={18} style={{ color: '#93C5FD' }} />
-            </div>
-            <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '26px', fontWeight: 800, color: '#EEF2FF' }}>My Orders</h1>
-          </div>
-          <div className="flex flex-wrap gap-4 sm:gap-6 pl-0 sm:pl-[50px] mt-3">
-            <div>
-              <p style={{ fontSize: '20px', fontWeight: 800, color: '#EEF2FF', fontFamily: 'Outfit, sans-serif' }}>{orders.length}</p>
-              <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Total orders</p>
+        {/* Quick stats */}
+        {orders.length > 0 && (
+          <div style={{ display: 'flex', gap: '24px', marginBottom: '24px', flexWrap: 'wrap' }} className="animate-fade-in-up">
+            <div style={{ padding: '14px 20px', borderRadius: 'var(--radius-md)', background: 'var(--surface-2)', border: '1px solid var(--border)' }}>
+              <p style={{ fontSize: '22px', fontWeight: 800, color: '#EEF2FF', fontFamily: 'Outfit, sans-serif' }}>{orders.length}</p>
+              <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>Total orders</p>
             </div>
             {pending > 0 && (
-              <>
-                <div style={{ width: '1px', background: 'rgba(255,255,255,0.06)' }} />
-                <div>
-                  <p style={{ fontSize: '20px', fontWeight: 800, color: '#FCD34D', fontFamily: 'Outfit, sans-serif' }}>{pending}</p>
-                  <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Awaiting action</p>
-                </div>
-              </>
+              <div style={{ padding: '14px 20px', borderRadius: 'var(--radius-md)', background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.18)' }}>
+                <p style={{ fontSize: '22px', fontWeight: 800, color: '#FCD34D', fontFamily: 'Outfit, sans-serif' }}>{pending}</p>
+                <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>Awaiting action</p>
+              </div>
             )}
-            <div style={{ width: '1px', background: 'rgba(255,255,255,0.06)' }} />
-            <div>
-              <p style={{ fontSize: '20px', fontWeight: 800, color: '#34D399', fontFamily: 'Outfit, sans-serif' }}>₹{totalRev.toLocaleString()}</p>
-              <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Revenue delivered</p>
+            <div style={{ padding: '14px 20px', borderRadius: 'var(--radius-md)', background: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.18)' }}>
+              <p style={{ fontSize: '22px', fontWeight: 800, color: '#34D399', fontFamily: 'Outfit, sans-serif' }}>₹{totalRev.toLocaleString()}</p>
+              <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>Revenue delivered</p>
             </div>
           </div>
-        </div>
+        )}
 
         {loading ? (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '160px' }}>
@@ -200,7 +193,8 @@ export default function FarmerOrders() {
             })}
           </div>
         )}
-      </main>
+        </div>
+      </div>
     </div>
   )
 }

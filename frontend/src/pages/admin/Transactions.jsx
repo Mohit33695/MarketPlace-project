@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Sidebar from '../../components/Sidebar'
+import Header from '../../components/Header'
 import api from '../../api/axios'
 import { BarChart3, ChevronDown, Search, Package, MapPin, DollarSign } from 'lucide-react'
 
@@ -33,49 +34,11 @@ export default function AdminTransactions() {
   const pendingCount = orders.filter(o => o.status === 'pending').length
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div className="page-shell">
       <Sidebar />
-      <main className="page-content">
-
-        {/* ── Header ──────────────────────────────────────────────── */}
-        <div style={{ marginBottom: '28px' }} className="animate-fade-in-up">
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '6px' }}>
-                <div style={{ width: '38px', height: '38px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.25)' }}>
-                  <BarChart3 size={18} style={{ color: '#C4B5FD' }} />
-                </div>
-                <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '26px', fontWeight: 800, color: '#EEF2FF' }}>Transactions</h1>
-              </div>
-              <div style={{ display: 'flex', gap: '20px', paddingLeft: '50px' }}>
-                <div>
-                  <p style={{ fontSize: '20px', fontWeight: 800, color: '#34D399', fontFamily: 'Outfit, sans-serif' }}>
-                    ₹{totalRevenue.toLocaleString()}
-                  </p>
-                  <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Revenue earned</p>
-                </div>
-                <div style={{ width: '1px', background: 'rgba(255,255,255,0.06)' }} />
-                <div>
-                  <p style={{ fontSize: '20px', fontWeight: 800, color: '#EEF2FF', fontFamily: 'Outfit, sans-serif' }}>
-                    {orders.length}
-                  </p>
-                  <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Total orders</p>
-                </div>
-                {pendingCount > 0 && (
-                  <>
-                    <div style={{ width: '1px', background: 'rgba(255,255,255,0.06)' }} />
-                    <div>
-                      <p style={{ fontSize: '20px', fontWeight: 800, color: '#FCD34D', fontFamily: 'Outfit, sans-serif' }}>
-                        {pendingCount}
-                      </p>
-                      <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Awaiting</p>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="page-content">
+        <Header title="Transactions" />
+        <div className="content-area">
 
         {/* ── Filter bar ──────────────────────────────────────────── */}
         <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap', alignItems: 'center' }}>
@@ -240,7 +203,8 @@ export default function AdminTransactions() {
             )}
           </div>
         )}
-      </main>
+        </div>
+      </div>
     </div>
   )
 }

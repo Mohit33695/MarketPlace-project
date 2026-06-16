@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Sidebar from '../../components/Sidebar'
+import Header from '../../components/Header'
 import StatCard from '../../components/StatCard'
 import api from '../../api/axios'
 import { Users, Package, ShoppingBag, DollarSign, TrendingUp, PieChart, Activity, Zap } from 'lucide-react'
@@ -48,10 +49,13 @@ export default function AdminDashboard() {
   }, [])
 
   if (loading) return (
-    <div style={{ display: 'flex' }}>
+    <div className="page-shell">
       <Sidebar />
-      <div className="page-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-        <div className="spinner" />
+      <div className="page-content">
+        <Header title="Dashboard" />
+        <div className="content-area" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+          <div className="spinner" />
+        </div>
       </div>
     </div>
   )
@@ -59,30 +63,11 @@ export default function AdminDashboard() {
   const s = data?.summary || {}
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div className="page-shell">
       <Sidebar />
-      <main className="page-content">
-
-        {/* ── Header ──────────────────────────────────────────────── */}
-        <div style={{ marginBottom: '32px' }} className="animate-fade-in-up">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '6px' }}>
-            <div style={{
-              width: '38px', height: '38px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'linear-gradient(135deg, rgba(139,92,246,0.2), rgba(59,130,246,0.2))',
-              border: '1px solid rgba(139,92,246,0.3)',
-            }}>
-              <Activity size={18} style={{ color: '#C4B5FD' }} />
-            </div>
-            <div>
-              <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '28px', fontWeight: 800, color: '#EEF2FF', lineHeight: 1 }}>
-                Admin Dashboard
-              </h1>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>
-                Platform overview & analytics
-              </p>
-            </div>
-          </div>
-        </div>
+      <div className="page-content">
+        <Header title="Admin Dashboard" subtitle="Platform overview" />
+        <div className="content-area">
 
         {/* ── Stat cards ───────────────────────────────────────────── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 stagger">
@@ -256,8 +241,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
-
-      </main>
+      </div>
     </div>
   )
 }

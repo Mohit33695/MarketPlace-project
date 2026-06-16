@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Sidebar from '../../components/Sidebar'
+import Header from '../../components/Header'
 import api from '../../api/axios'
 import toast from 'react-hot-toast'
 import { CheckCircle, MapPin, ArrowLeft, ShieldCheck, Truck, ShoppingBag, CreditCard, Tag } from 'lucide-react'
@@ -41,63 +42,45 @@ export default function Checkout() {
   const total = parseFloat(cart?.total || 0)
 
   if (success) return (
-    <div style={{ display: 'flex' }}>
+    <div className="page-shell">
       <Sidebar />
-      <main className="page-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div className="glass animate-fade-in-up" style={{ padding: '48px', textAlign: 'center', maxWidth: '440px', margin: '40px auto' }}>
-          <div className="animate-pulse-green" style={{
-            width: '80px', height: '80px', borderRadius: '50%',
-            background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.22)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px'
-          }}>
-            <CheckCircle size={36} style={{ color: '#34D399' }} />
-          </div>
-          <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '24px', fontWeight: 800, color: '#EEF2FF', marginBottom: '8px' }}>
-            Order Confirmed! 🎉
-          </h2>
-          <p style={{ color: 'var(--text-sec)', fontSize: '14px', marginBottom: '32px', lineHeight: 1.5 }}>
-            Your order has been sent to the farmer. You can track its shipment status in your dashboard.
-          </p>
-          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-            <button onClick={() => navigate('/buyer/orders')} className="btn-primary" style={{ fontSize: '14px' }}>
-              Track Order
-            </button>
-            <button onClick={() => navigate('/buyer')} className="btn-secondary" style={{ fontSize: '14px' }}>
-              Shop More
-            </button>
+      <div className="page-content">
+        <Header title="Order Confirmed" />
+        <div className="content-area" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+          <div className="glass animate-fade-in-up" style={{ padding: '48px', textAlign: 'center', maxWidth: '440px', margin: '0 auto' }}>
+            <div className="animate-pulse-green" style={{
+              width: '80px', height: '80px', borderRadius: '50%',
+              background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.22)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px'
+            }}>
+              <CheckCircle size={36} style={{ color: '#34D399' }} />
+            </div>
+            <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '24px', fontWeight: 800, color: '#EEF2FF', marginBottom: '8px' }}>
+              Order Confirmed! 🎉
+            </h2>
+            <p style={{ color: 'var(--text-sec)', fontSize: '14px', marginBottom: '32px', lineHeight: 1.5 }}>
+              Your order has been sent to the farmer. You can track its shipment status in your dashboard.
+            </p>
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+              <button onClick={() => navigate('/buyer/orders')} className="btn-primary" style={{ fontSize: '14px' }}>
+                Track Order
+              </button>
+              <button onClick={() => navigate('/buyer')} className="btn-secondary" style={{ fontSize: '14px' }}>
+                Shop More
+              </button>
+            </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   )
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div className="page-shell">
       <Sidebar />
-      <main className="page-content">
-
-        {/* Back button */}
-        <button onClick={() => navigate(-1)} style={{
-          display: 'inline-flex', alignItems: 'center', gap: '8px',
-          background: 'none', border: 'none', color: 'var(--text-muted)',
-          fontSize: '13px', fontWeight: 600, cursor: 'pointer',
-          marginBottom: '20px', transition: 'color 0.2s', padding: 0
-        }} onMouseEnter={e => e.currentTarget.style.color = '#EEF2FF'}
-           onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}>
-          <ArrowLeft size={14} /> Back to Cart
-        </button>
-
-        {/* Header */}
-        <div style={{ marginBottom: '28px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ width: '38px', height: '38px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.25)' }}>
-              <MapPin size={18} style={{ color: '#34D399' }} />
-            </div>
-            <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '26px', fontWeight: 800, color: '#EEF2FF' }}>
-              Checkout
-            </h1>
-          </div>
-        </div>
+      <div className="page-content">
+        <Header title="Checkout" />
+        <div className="content-area">
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6 items-start">
           
@@ -214,7 +197,8 @@ export default function Checkout() {
           </div>
 
         </div>
-      </main>
+        </div>
+      </div>
     </div>
   )
 }
