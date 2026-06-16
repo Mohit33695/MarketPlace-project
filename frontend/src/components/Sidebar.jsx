@@ -2,6 +2,8 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import LanguageSwitcher from './LanguageSwitcher'
 import api from '../api/axios'
 import {
   LayoutDashboard, Package, Warehouse, ShoppingBag, Brain,
@@ -11,11 +13,11 @@ import {
 
 const NAV = {
   farmer: [
-    { to: '/farmer',            icon: LayoutDashboard, label: 'Dashboard',   end: true },
-    { to: '/farmer/products',   icon: Package,         label: 'My Products' },
-    { to: '/farmer/inventory',  icon: Warehouse,       label: 'Inventory' },
-    { to: '/farmer/orders',     icon: ShoppingBag,     label: 'Orders' },
-    { to: '/farmer/ai-pricing', icon: Brain,           label: 'AI Pricing',  ai: true },
+    { to: '/farmer',            icon: LayoutDashboard, label: 'dashboard',   end: true },
+    { to: '/farmer/products',   icon: Package,         label: 'myProducts' },
+    { to: '/farmer/inventory',  icon: Warehouse,       label: 'inventory' },
+    { to: '/farmer/orders',     icon: ShoppingBag,     label: 'orders' },
+    { to: '/farmer/ai-pricing', icon: Brain,           label: 'aiPricing',  ai: true },
   ],
   buyer: [
     { to: '/buyer',       icon: Home,          label: 'Marketplace', end: true },
@@ -39,6 +41,7 @@ const ROLE_THEME = {
 export default function Sidebar() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [cartCount, setCartCount] = useState(0)
 
   useEffect(() => {
@@ -144,7 +147,7 @@ export default function Sidebar() {
                 </span>
               )}
             </div>
-            <span style={{ flex: 1 }}>{label}</span>
+            <span style={{ flex: 1 }}>{t(label)}</span>
             {ai && (
               <span style={{
                 fontSize: '9px', fontWeight: 800, padding: '2px 7px', borderRadius: '6px',
@@ -168,7 +171,7 @@ export default function Sidebar() {
         <div style={{ margin: '12px 10px 0', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
           <NavLink to="/profile" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
             <UserCircle size={17} />
-            <span style={{ flex: 1 }}>My Profile</span>
+            <span style={{ flex: 1 }}>{t('myProfile')}</span>
             <ChevronRight size={13} style={{ opacity: 0.35 }} />
           </NavLink>
         </div>
@@ -190,6 +193,10 @@ export default function Sidebar() {
             <span style={{ marginLeft: 'auto', fontSize: '11px', color: 'var(--text-muted)' }}>✓ Verified</span>
           )}
         </div>
+        
+        <div style={{ marginBottom: '12px' }}>
+          <LanguageSwitcher />
+        </div>
 
         <button onClick={handleLogout}
           style={{
@@ -201,7 +208,7 @@ export default function Sidebar() {
           onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; e.currentTarget.style.color = '#FCA5A5'; }}
           onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-sec)'; }}>
           <LogOut size={17} />
-          Sign Out
+          {t('signOut')}
         </button>
       </div>
     </aside>
