@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import Sidebar from '../../components/Sidebar'
 import Header from '../../components/Header'
 import StatCard from '../../components/StatCard'
@@ -29,6 +30,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 export default function FarmerDashboard() {
   const { user } = useAuth()
+  const { t } = useTranslation()
   const [stats, setStats] = useState(null)
   const [lowStock, setLowStock] = useState([])
   const [loading, setLoading] = useState(true)
@@ -45,9 +47,7 @@ export default function FarmerDashboard() {
   }, [])
 
   const approved = user?.is_approved
-  const now = new Date()
-  const hour = now.getHours()
-  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
+  const greeting = t('goodEvening')
 
   return (
     <div className="page-shell">
@@ -90,14 +90,22 @@ export default function FarmerDashboard() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '130px' }}>
               <div className="spinner" />
             </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 stagger">
-              <StatCard icon={DollarSign} label="Total Revenue"    value={`₹${(stats?.total_revenue || 0).toLocaleString()}`} color="#10B981" trend={12} />
-              <StatCard icon={ShoppingBag} label="Total Orders"    value={stats?.total_orders || 0}                          color="#3B82F6"  trend={8} />
-              <StatCard icon={Package}     label="Active Products" value={stats?.active_products || 0}                       color="#F59E0B" />
-              <StatCard icon={Star}        label="Avg Rating"      value={`${stats?.avg_rating?.toFixed?.(1) || '4.5'} ★`}   color="#8B5CF6" />
-            </div>
-          )}
+          </div>
+        )}
+
+        {/* ── Stat cards ───────────────────────────────────────────── */}
+        {loading ? (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '140px' }}>
+            <div className="spinner" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 stagger">
+            <StatCard icon={DollarSign} label={t('totalRevenue')} value={`₹${(stats?.total_revenue || 0).toLocaleString()}`} color="#10B981" trend={12} />
+            <StatCard icon={ShoppingBag} label={t('totalOrders')}   value={stats?.total_orders || 0}     color="#3B82F6"  trend={8} />
+            <StatCard icon={Package}    label={t('activeProducts')} value={stats?.active_products || 0}   color="#F59E0B" />
+            <StatCard icon={Star}       label={t('avgRating')}      value={`${stats?.avg_rating?.toFixed?.(1) || '4.5'} ★`} color="#8B5CF6" />
+          </div>
+        )}
 
           {/* ── Charts ───────────────────────────────────────────── */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-8">

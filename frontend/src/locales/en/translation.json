@@ -1,0 +1,15 @@
+{
+  "dashboard": "Dashboard",
+  "myProducts": "My Products",
+  "inventory": "Inventory",
+  "orders": "Orders",
+  "aiPricing": "AI Pricing",
+  "myProfile": "My Profile",
+  "signOut": "Sign Out",
+  "totalRevenue": "Total Revenue",
+  "totalOrders": "Total Orders",
+  "activeProducts": "Active Products",
+  "avgRating": "Average Rating",
+  "farmerPortal": "Farmer Portal",
+  "goodEvening": "Good Evening"
+}

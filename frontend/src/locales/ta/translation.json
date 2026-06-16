@@ -1,0 +1,15 @@
+{
+  "dashboard": "முகப்புப்பலகை",
+  "myProducts": "என் தயாரிப்புகள்",
+  "inventory": "சரக்கு",
+  "orders": "ஆர்டர்கள்",
+  "aiPricing": "AI விலை",
+  "myProfile": "என் சுயவிவரம்",
+  "signOut": "வெளியேறு",
+  "totalRevenue": "மொத்த வருவாய்",
+  "totalOrders": "மொத்த ஆர்டர்கள்",
+  "activeProducts": "செயலில் உள்ள தயாரிப்புகள்",
+  "avgRating": "சராசரி மதிப்பீடு",
+  "farmerPortal": "விவசாயி போர்டல்",
+  "goodEvening": "மாலை வணக்கம்"
+}
