@@ -107,3 +107,4 @@ GET  /api/analytics/admin/
    DEBUG=False
    ```
 3. Uncomment the `dj_database_url` block in `settings.py`
+This is our project
