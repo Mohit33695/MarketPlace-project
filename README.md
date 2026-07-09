@@ -107,6 +107,7 @@ GET  /api/analytics/admin/
    DEBUG=False
    ```
 3. Uncomment the `dj_database_url` block in `settings.py`
+ HEAD
 
    Copyright (c) (2026) Mohit S Gaonkar, Nandan A Divate, Nandan M Chinchali
 
@@ -127,3 +128,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+=======
+This is our project
+ 3334168 (Readme Update)
